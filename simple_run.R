@@ -21,16 +21,17 @@ library(tidyverse)
 
 
 # this line loads the data:
-load(url("https://raw.githubusercontent.com/karlrohe/spectral_workshop/master/data/journal-journal_graph.RData"))
+load(url("https://github.com/karlrohe/dogs-say-meow/raw/master/A_journal.RData"))
+
+# these next two lines make the graph symmetric/undirected and binary:
 A = A_journal + t(A_journal)
-# this next line makes the graph binary:
 A@x[] = 1 
 
 
 #######################################################
 ##### ESTIMATE K WITH CROSS-VALIDATED EIGENVALUES #####
 #######################################################
-
+# https://arxiv.org/abs/2108.03336
 # set.seed(1)
 # maybe takes 30 seconds:
 eigen_cross_validated = gdim::eigcv(A, 
@@ -50,6 +51,7 @@ L_reg = gdim:::glaplacian(A)
 ##################################################
 ##### RADIAL STREAKS IN PCs/SINGULAR VECTORS #####
 ##################################################
+# https://academic.oup.com/jrsssb/article/85/4/1037/7221295
 
 # maybe takes 30 seconds:
 s = irlba(L_reg,100)
@@ -69,6 +71,8 @@ pairs(u_bottom[plot_high_leverage_sample,], pch = ".")
 ########################################################
 ##### RADIAL STREAKS AFTER VARIMAX ALIGN WITH AXES #####
 ########################################################
+# https://academic.oup.com/jrsssb/article/85/4/1037/7221295
+
 # maybe takes 30 seconds:
 varimax_rotation = varimax(s$u, normalize = FALSE)$rotmat
 z=s$u%*%varimax_rotation
@@ -89,13 +93,13 @@ pairs(z_bottom[plot_high_leverage_sample,], pch = ".")
 ################################################
 ##### NAME THE FACTORS / CLUSTERS / BLOCKS #####
 ################################################
-
+# https://academic.oup.com/jrsssb/article/85/4/1037/7221295
 
 
 uniqueJournals = rownames(A)
 
 #bff:
-source("bff_with_unigrams.R")
+source("https://raw.githubusercontent.com/karlrohe/dogs-say-meow/master/bff_with_unigrams.R")
 factor_names = bff_with_unigrams(z, uniqueJournals,num_best = 5)
 factor_names
 # this is a lot to interpret!
@@ -105,9 +109,17 @@ View(factor_names)
 
 
 
-################################################
+#################################
 ##### COMPUTE THE HIERARCHY #####
-################################################
+#################################
+# https://arxiv.org/abs/2309.01301
+
+# for this, we are going to use the asymmetric version
+#   ... how a journal is cited (column information)
+#   is much more informative 
+#   this takes care of "spam journals" that do a lot of citing, but don't get cited much
+
+
 L_reg_asymmetric = gdim:::glaplacian(A_journal)
 sa= irlba(L_reg_asymmetric,100)
 varimax_rotation = varimax(sa$v, normalize = FALSE)$rotmat
