@@ -58,7 +58,7 @@ s = irlba(L_reg,100)
 
 # plot the top 10 singular vectors of regularized Laplacian:
 u_top = s$u[,1:10]
-n = nrow(u)
+n = nrow(u_top)
 plot_high_leverage_sample = sample(n,1000,prob = rowSums(u_top^2))
 pairs(u_top[plot_high_leverage_sample,], pch = ".")
 
@@ -68,9 +68,10 @@ plot_high_leverage_sample = sample(n,1000,prob = rowSums(u_bottom^2))
 pairs(u_bottom[plot_high_leverage_sample,], pch = ".")
 
 
-########################################################
-##### RADIAL STREAKS AFTER VARIMAX ALIGN WITH AXES #####
-########################################################
+#############################################################
+##### AFTER VARIMAX, THE RADIAL STREAKS ALIGN WITH AXES #####
+#############################################################
+
 # https://academic.oup.com/jrsssb/article/85/4/1037/7221295
 
 # maybe takes 30 seconds:
