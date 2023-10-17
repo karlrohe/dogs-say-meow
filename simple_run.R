@@ -101,6 +101,8 @@ uniqueJournals = rownames(A)
 
 #bff:
 source("https://raw.githubusercontent.com/karlrohe/dogs-say-meow/master/bff_with_unigrams.R")
+
+
 factor_names = bff_with_unigrams(z, uniqueJournals,num_best = 5)
 factor_names
 # this is a lot to interpret!
