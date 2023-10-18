@@ -10,8 +10,11 @@ library(gdim)
 install.packages("vsp")
 library(vsp)
 
-install.packages("irlba") # library(RSpectra) is also great! both get you sparse svd. RSpectra::svds
+# install.packages("irlba") # library(RSpectra) is also great! both get you sparse svd. RSpectra::svds
 library(irlba)
+
+install.packages("ape") # for neighbor joining
+library(ape)
 
 ## tidyverse is for plotting and stuff.
 ## This one might take awhile...
@@ -155,7 +158,7 @@ image(B_norm)
 dist_mat= -log(B_norm)
 colnames(dist_mat) = factor_names$word1
 rownames(dist_mat) = factor_names$word1
-library(ape)
+
 tree_hat = ape::nj(dist_mat)
 plot(tree_hat, "u", cex = .6)
 
